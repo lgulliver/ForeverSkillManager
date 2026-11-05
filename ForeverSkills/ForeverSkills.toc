@@ -1,6 +1,7 @@
 ## Interface: 16001
 ## Title: ForeverSkills
 ## Notes: Places newly learned spells on an empty visible action bar slot and upgrades action bar spells to the highest rank you know. Built for WoW Forever.
+## IconTexture: Interface\Icons\INV_Misc_Book_09
 ## Version: 0.1.0
 ## SavedVariablesPerCharacter: ForeverSkillsCharDB
 
