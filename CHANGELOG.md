@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to ForeverSkills. Format follows [Keep a Changelog](https://keepachangelog.com/).
+All notable changes to ForeverSkillManager. Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
@@ -10,6 +10,7 @@ All notable changes to ForeverSkills. Format follows [Keep a Changelog](https://
 - Bartender4 support: fills Bartender's enabled, visible bars and respects each bar's button count.
 
 ### Changed
+- Renamed the addon from ForeverSkills to ForeverSkillManager, because the old name was already taken on CurseForge. The folder, saved-variables name and zip name changed, so settings start fresh. `/fskills` and `/fskill` still work, and `/fsm` is new.
 - With Bartender4, the settings panel lists only enabled bars, and the fill-order tooltip no longer refers to Blizzard bar names.
 
 ## [0.1.0]

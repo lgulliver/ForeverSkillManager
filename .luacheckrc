@@ -3,10 +3,11 @@ max_line_length = false
 
 -- Globals the addon assigns to.
 globals = {
-	"ForeverSkillsCharDB",
+	"ForeverSkillManagerCharDB",
 	"SlashCmdList",
-	"SLASH_FOREVERSKILLS1",
-	"SLASH_FOREVERSKILLS2",
+	"SLASH_FOREVERSKILLMANAGER1",
+	"SLASH_FOREVERSKILLMANAGER2",
+	"SLASH_FOREVERSKILLMANAGER3",
 }
 
 -- WoW API the addon reads.

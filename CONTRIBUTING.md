@@ -16,18 +16,18 @@ Open an issue and include:
 There is no build step. The addon is plain Lua.
 
 1. Clone the repo.
-2. Symlink `ForeverSkills/` into `World of Warcraft/_forever_/Interface/AddOns/` (see the README).
+2. Symlink `ForeverSkillManager/` into `World of Warcraft/_forever_/Interface/AddOns/` (see the README).
 3. Edit, then `/reload` in game to pick up changes.
 
-The addon can't be run outside the game, so test changes in the client and say what you tested in your pull request. CI runs [luacheck](https://github.com/lunarmodules/luacheck) on `ForeverSkills/`; if you use a new WoW API global, add it to `read_globals` in `.luacheckrc`.
+The addon can't be run outside the game, so test changes in the client and say what you tested in your pull request. CI runs [luacheck](https://github.com/lunarmodules/luacheck) on `ForeverSkillManager/`; if you use a new WoW API global, add it to `read_globals` in `.luacheckrc`.
 
 ## Code style
 
 - Match the surrounding code: tabs for indentation, comments only where the reason isn't obvious.
-- Keep everything in `ForeverSkills.lua` unless a file would clearly be easier to read split out. If you add a file, list it in `ForeverSkills.toc`.
+- Keep everything in `ForeverSkillManager.lua` unless a file would clearly be easier to read split out. If you add a file, list it in `ForeverSkillManager.toc`.
 - Wrap values returned by Blizzard APIs in `Val()` before comparing them, because Midnight-era APIs can return secret values.
 - Changes to action bars must not run in combat. Defer them, as `Update()` does.
-- Per-character data lives in `ForeverSkillsCharDB`; give new settings a default in `DEFAULTS`.
+- Per-character data lives in `ForeverSkillManagerCharDB`; give new settings a default in `DEFAULTS`.
 
 ## Commits and pull requests
 
@@ -40,7 +40,7 @@ The addon can't be run outside the game, so test changes in the client and say w
 
 Releases are cut by pushing a version tag, for example `git tag v0.2.0 && git push origin v0.2.0`. The Release workflow then:
 
-1. Builds `ForeverSkills-<version>-forever.zip` with the TOC version filled in. The `-forever` suffix is how WowUp matches the asset to the Forever client.
+1. Builds `ForeverSkillManager-<version>-forever.zip` with the TOC version filled in. The `-forever` suffix is how WowUp matches the asset to the Forever client.
 2. Publishes a GitHub release with generated notes. A tag with a hyphen (`v0.2.0-alpha.1`) is a pre-release.
 3. Uploads the same zip to CurseForge and Wago, if configured.
 

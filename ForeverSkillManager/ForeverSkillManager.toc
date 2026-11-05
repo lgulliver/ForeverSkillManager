@@ -1,9 +1,9 @@
 ## Interface: 16001
-## Title: ForeverSkills
+## Title: ForeverSkillManager
 ## Notes: Places newly learned spells on an empty visible action bar slot and upgrades action bar spells to the highest rank you know. Built for WoW Forever.
 ## IconTexture: Interface\Icons\INV_Misc_Book_09
 ## OptionalDeps: Bartender4
-## Version: 0.1.0-alpha.2
-## SavedVariablesPerCharacter: ForeverSkillsCharDB
+## Version: @project-version@
+## SavedVariablesPerCharacter: ForeverSkillManagerCharDB
 
-ForeverSkills.lua
+ForeverSkillManager.lua

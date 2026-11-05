@@ -1,9 +1,9 @@
--- ForeverSkills: automatic action bar upkeep for WoW Forever (interface 16001).
+-- ForeverSkillManager: automatic action bar upkeep for WoW Forever (interface 16001).
 --   1. A newly learned spell goes into the first empty slot of a visible default bar.
 --   2. A spell on a bar is swapped for the highest rank you know.
 -- Bars cannot be edited in combat, so work is deferred until combat ends.
 
-local ADDON = "ForeverSkills"
+local ADDON = "ForeverSkillManager"
 local DEBOUNCE = 0.5
 local MAX_ACTION_SLOT = 180
 local SLOTS_PER_BAR = 12
@@ -27,7 +27,7 @@ local CHAT_ALL, CHAT_WARN = 1, 2 -- 3 is silent
 
 local DEFAULTS = { autoPlace = true, autoUpgrade = true, fillOrder = ORDER_POSITION, chat = CHAT_ALL }
 
-local db -- ForeverSkillsCharDB, set on ADDON_LOADED
+local db -- ForeverSkillManagerCharDB, set on ADDON_LOADED
 local pending = false
 
 local function Count(t)
@@ -343,7 +343,7 @@ local function BuildIgnorePanel()
 
 	local desc = panel:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
 	desc:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
-	desc:SetText("Ticked spells are never placed or rank-upgraded by ForeverSkills.")
+	desc:SetText("Ticked spells are never placed or rank-upgraded by ForeverSkillManager.")
 
 	local scroll = CreateFrame("ScrollFrame", nil, panel, "UIPanelScrollFrameTemplate")
 	scroll:SetPoint("TOPLEFT", 16, -72)
@@ -442,7 +442,7 @@ local function BuildSettings()
 	Check("autoUpgrade", db, "autoUpgrade", "Upgrade spell ranks", DEFAULTS.autoUpgrade,
 		"Replace lower ranks on your bars with the highest rank you know.")
 	Dropdown("chat", "chat", "Chat messages", DEFAULTS.chat,
-		"How much ForeverSkills says in chat. Command replies are always shown.",
+		"How much ForeverSkillManager says in chat. Command replies are always shown.",
 		{ "Everything", "Warnings only", "Silent" })
 
 	Header(Bartender4 and "Bars (Bartender4 detected)" or "Bars")
@@ -470,8 +470,8 @@ local function OpenSettings()
 end
 
 local function InitDB()
-	ForeverSkillsCharDB = ForeverSkillsCharDB or {}
-	db = ForeverSkillsCharDB
+	ForeverSkillManagerCharDB = ForeverSkillManagerCharDB or {}
+	db = ForeverSkillManagerCharDB
 	for key, value in pairs(DEFAULTS) do
 		if db[key] == nil then
 			db[key] = value
@@ -525,9 +525,10 @@ frame:SetScript("OnEvent", function(_, event, arg1)
 	Schedule()
 end)
 
-SLASH_FOREVERSKILLS1 = "/fskills"
-SLASH_FOREVERSKILLS2 = "/fskill"
-SlashCmdList.FOREVERSKILLS = function(arg)
+SLASH_FOREVERSKILLMANAGER1 = "/fskills"
+SLASH_FOREVERSKILLMANAGER2 = "/fskill"
+SLASH_FOREVERSKILLMANAGER3 = "/fsm"
+SlashCmdList.FOREVERSKILLMANAGER = function(arg)
 	arg = (arg or ""):lower()
 	if arg == "" or arg == "options" or arg == "config" then
 		OpenSettings()

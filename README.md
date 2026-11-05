@@ -1,4 +1,4 @@
-# ForeverSkills
+# ForeverSkillManager
 
 An addon for [World of Warcraft: Forever](https://worldofwarcraft.blizzard.com/) that handles action bar upkeep the way retail does by default. Works with the default Blizzard bars and Bartender4.
 
@@ -10,14 +10,14 @@ An addon for [World of Warcraft: Forever](https://worldofwarcraft.blizzard.com/)
 
 Requires the WoW Forever client (interface `16001`).
 
-1. Download this repo (Code > Download ZIP, or `git clone`), then copy or symlink the `ForeverSkills` folder into
+1. Download this repo (Code > Download ZIP, or `git clone`), then copy or symlink the `ForeverSkillManager` folder into
    `World of Warcraft/_forever_/Interface/AddOns/`.
 2. Start the game, or `/reload` if it's already running.
 
 For development, a symlink means edits in this repo show up in the game folder immediately:
 
 ```sh
-ln -s "$PWD/ForeverSkills" "/path/to/World of Warcraft/_forever_/Interface/AddOns/ForeverSkills"
+ln -s "$PWD/ForeverSkillManager" "/path/to/World of Warcraft/_forever_/Interface/AddOns/ForeverSkillManager"
 ```
 
 ## Usage
@@ -29,17 +29,17 @@ ln -s "$PWD/ForeverSkills" "/path/to/World of Warcraft/_forever_/Interface/AddOn
 | `/fskills debug` | Print visible bars, fill order, first empty slot and spell counts |
 | `/fskills reset` | Clear the recorded spell baseline |
 
-`/fskill` works as an alias.
+`/fsm` and `/fskill` work as aliases.
 
 On a character's first login the addon only records what you already know and places nothing. Run `/fskills sync` once if you want your existing spells placed.
 
 ## Bartender4
 
-If Bartender4 is loaded, ForeverSkills reads its bars instead of the Blizzard ones: enabled bars that are currently shown (so bars hidden by a visibility rule are skipped) and only the buttons each bar actually has. Without Bartender4 nothing changes. `/fskills debug` shows which bar source is in use.
+If Bartender4 is loaded, ForeverSkillManager reads its bars instead of the Blizzard ones: enabled bars that are currently shown (so bars hidden by a visibility rule are skipped) and only the buttons each bar actually has. Without Bartender4 nothing changes. `/fskills debug` shows which bar source is in use.
 
 ## Settings
 
-Esc > Options > AddOns > ForeverSkills. All settings are saved per character.
+Esc > Options > AddOns > ForeverSkillManager. All settings are saved per character.
 
 - Place new spells and upgrade spell ranks, each on or off
 - Chat messages: everything, warnings only, or silent
