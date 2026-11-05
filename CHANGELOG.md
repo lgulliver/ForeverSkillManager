@@ -4,6 +4,9 @@ All notable changes to ForeverSkills. Format follows [Keep a Changelog](https://
 
 ## [Unreleased]
 
+### Added
+- luacheck lint workflow and `.luacheckrc`.
+
 ## [0.1.0]
 
 ### Added

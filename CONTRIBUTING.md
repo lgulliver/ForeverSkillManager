@@ -19,7 +19,7 @@ There is no build step. The addon is plain Lua.
 2. Symlink `ForeverSkills/` into `World of Warcraft/_forever_/Interface/AddOns/` (see the README).
 3. Edit, then `/reload` in game to pick up changes.
 
-The addon can't be run outside the game, so test changes in the client and say what you tested in your pull request.
+The addon can't be run outside the game, so test changes in the client and say what you tested in your pull request. CI runs [luacheck](https://github.com/lunarmodules/luacheck) on `ForeverSkills/`; if you use a new WoW API global, add it to `read_globals` in `.luacheckrc`.
 
 ## Code style
 
