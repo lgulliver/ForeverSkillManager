@@ -44,7 +44,7 @@ Esc > Options > AddOns > ForeverSkills. All settings are saved per character.
 - Place new spells and upgrade spell ranks, each on or off
 - Chat messages: everything, warnings only, or silent
 - Which bars may receive new spells, and the fill order (by screen position, or a fixed order)
-  - With Bartender4 loaded, the list shows Bartender bars 1 to 10. Only enabled, currently visible bars are filled, and a bar with fewer than 12 buttons only uses the buttons it has.
+  - With Bartender4 loaded, the list shows the Bartender bars you have enabled (a bar you enable later appears after a `/reload`). Only currently visible bars are filled, and a bar with fewer than 12 buttons only uses the buttons it has.
 - An ignore list of spells that are never placed or upgraded
 
 Rank upgrades happen on any bar, including ones you've excluded from placement.

@@ -8,6 +8,9 @@ All notable changes to ForeverSkills. Format follows [Keep a Changelog](https://
 - luacheck lint workflow and `.luacheckrc`.
 - Bartender4 support: fills Bartender's enabled, visible bars and respects each bar's button count.
 
+### Changed
+- With Bartender4, the settings panel lists only enabled bars, and the fill-order tooltip no longer refers to Blizzard bar names.
+
 ## [0.1.0]
 
 ### Added

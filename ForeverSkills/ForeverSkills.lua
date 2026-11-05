@@ -395,14 +395,19 @@ local function BuildIgnorePanel()
 	return panel
 end
 
--- Bars offered as checkboxes: Bartender4's ten when it is installed, else the default Blizzard bars.
+-- Bars offered as checkboxes: the Bartender4 bars enabled in its profile when it is
+-- installed (a bar enabled later shows up after a /reload), else the default Blizzard bars.
 local function SettingsBars()
 	if not Bartender4 then
 		return BARS
 	end
+	local profile = Bartender4.db and Bartender4.db.profile
 	local list = {}
 	for id = 1, BARTENDER_BARS do
-		list[id] = { key = "bt4_" .. id, label = "Bartender bar " .. id }
+		local config = profile and profile.actionbars and profile.actionbars[id]
+		if not config or config.enabled then
+			list[#list + 1] = { key = "bt4_" .. id, label = "Bartender bar " .. id }
+		end
 	end
 	return list
 end
@@ -442,7 +447,7 @@ local function BuildSettings()
 
 	Header(Bartender4 and "Bars (Bartender4 detected)" or "Bars")
 	Dropdown("fillOrder", "fillOrder", "Fill order", DEFAULTS.fillOrder,
-		"Screen position fills the main bar, then the lowest bar upward. Fixed uses the order listed below.",
+		"By screen position fills the main bar first, then the bar lowest on screen upward. Fixed fills in the order the bars are listed below.",
 		{ "By screen position", "Fixed (list order)" })
 	for _, bar in ipairs(SettingsBars()) do
 		Check("bar_" .. bar.key, db.bars, bar.key, bar.label, true,
