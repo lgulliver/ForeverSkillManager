@@ -403,7 +403,9 @@ local function BuildSettings()
 end
 
 local function OpenSettings()
-	if settingsCategory then
+	if InCombatLockdown() then
+		Print("can't open settings in combat; try again afterwards.", "cmd")
+	elseif settingsCategory then
 		Settings.OpenToCategory(settingsCategory:GetID())
 	else
 		Print("settings panel is unavailable.", "cmd")
