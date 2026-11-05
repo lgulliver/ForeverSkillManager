@@ -1,0 +1,23 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # Builds ForeverSkills-<version>-forever.zip and attaches it to the GitHub release.
+      # The "-forever" suffix is how WowUp matches a release asset to the Forever client.
+      - uses: BigWigsMods/packager@v2
+        with:
+          args: -t ForeverSkills -n "{package-name}-{project-version}-forever"
+        env:
+          GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
