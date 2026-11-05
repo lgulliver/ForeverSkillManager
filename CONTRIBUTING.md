@@ -42,16 +42,17 @@ Releases are cut by pushing a version tag, for example `git tag v0.2.0 && git pu
 
 1. Builds `ForeverSkillManager-<version>-forever.zip` with the TOC version filled in. The `-forever` suffix is how WowUp matches the asset to the Forever client.
 2. Publishes a GitHub release with generated notes. A tag with a hyphen (`v0.2.0-alpha.1`) is a pre-release.
-3. Uploads the same zip to CurseForge and Wago, if configured.
+3. Uploads the same zip to CurseForge, if configured. Wago is notified by a GitHub webhook on release and reads the game version from the `-forever.zip` name.
 
-The game patch is derived from the TOC `## Interface` line (`16001` becomes `1.60.1`). CurseForge and Wago must already list that Forever patch, or the upload fails.
+The game patch is derived from the TOC `## Interface` line (`16001` becomes `1.60.1`). CurseForge must already list that Forever patch, or the upload fails.
 
-To enable the uploads, add these in the repo's Settings > Secrets and variables > Actions. A site is skipped until both of its values are set.
+To enable the CurseForge upload, add these in the repo's Settings > Secrets and variables > Actions. The step is skipped until both are set.
 
-| Site | Secret | Variable |
-|------|--------|----------|
-| CurseForge | `CF_API_TOKEN` | `CF_PROJECT_ID` |
-| Wago | `WAGO_API_TOKEN` | `WAGO_PROJECT_ID` |
+| Secret | Variable |
+|--------|----------|
+| `CF_API_TOKEN` | `CF_PROJECT_ID` |
+
+Wago needs no secrets here. The Wago addon is linked to this repo with a webhook (Settings > Webhooks) that sends release events to `https://addons.wago.io/api/github/webhook`.
 
 ## Licence
 

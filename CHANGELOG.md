@@ -6,7 +6,7 @@ All notable changes to ForeverSkillManager. Format follows [Keep a Changelog](ht
 
 ### Added
 - luacheck lint workflow and `.luacheckrc`.
-- Tag-triggered release workflow: builds the `-forever` zip, publishes a GitHub release, and uploads to CurseForge and Wago when configured.
+- Tag-triggered release workflow: builds the `-forever` zip, publishes a GitHub release, and uploads to CurseForge when configured. Wago picks releases up through a GitHub webhook.
 - Bartender4 support: fills Bartender's enabled, visible bars and respects each bar's button count.
 
 ### Changed
