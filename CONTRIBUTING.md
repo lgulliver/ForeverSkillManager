@@ -36,6 +36,23 @@ The addon can't be run outside the game, so test changes in the client and say w
 - Update `CHANGELOG.md` under "Unreleased" and the README if behaviour or commands change.
 - Describe what you tested in the client.
 
+## Releasing
+
+Releases are cut by pushing a version tag, for example `git tag v0.2.0 && git push origin v0.2.0`. The Release workflow then:
+
+1. Builds `ForeverSkills-<version>-forever.zip` with the TOC version filled in. The `-forever` suffix is how WowUp matches the asset to the Forever client.
+2. Publishes a GitHub release with generated notes. A tag with a hyphen (`v0.2.0-alpha.1`) is a pre-release.
+3. Uploads the same zip to CurseForge and Wago, if configured.
+
+The game patch is derived from the TOC `## Interface` line (`16001` becomes `1.60.1`). CurseForge and Wago must already list that Forever patch, or the upload fails.
+
+To enable the uploads, add these in the repo's Settings > Secrets and variables > Actions. A site is skipped until both of its values are set.
+
+| Site | Secret | Variable |
+|------|--------|----------|
+| CurseForge | `CF_API_TOKEN` | `CF_PROJECT_ID` |
+| Wago | `WAGO_API_TOKEN` | `WAGO_PROJECT_ID` |
+
 ## Licence
 
 By contributing you agree your work is released under the [MIT licence](LICENSE).

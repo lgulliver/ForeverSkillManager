@@ -6,6 +6,7 @@ All notable changes to ForeverSkills. Format follows [Keep a Changelog](https://
 
 ### Added
 - luacheck lint workflow and `.luacheckrc`.
+- Tag-triggered release workflow: builds the `-forever` zip, publishes a GitHub release, and uploads to CurseForge and Wago when configured.
 - Bartender4 support: fills Bartender's enabled, visible bars and respects each bar's button count.
 
 ### Changed

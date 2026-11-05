@@ -10,6 +10,13 @@ permissions:
 jobs:
   package:
     runs-on: ubuntu-latest
+    # CurseForge and Wago uploads run only when their token and project ID are configured
+    # (secrets CF_API_TOKEN / WAGO_API_TOKEN, variables CF_PROJECT_ID / WAGO_PROJECT_ID).
+    env:
+      CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+      CF_PROJECT_ID: ${{ vars.CF_PROJECT_ID }}
+      WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
+      WAGO_PROJECT_ID: ${{ vars.WAGO_PROJECT_ID }}
     steps:
       - uses: actions/checkout@v4
 
@@ -21,15 +28,43 @@ jobs:
           mkdir -p dist
           cp -r ForeverSkills dist/ForeverSkills
           sed -i "s/@project-version@/${version}/" dist/ForeverSkills/ForeverSkills.toc
-          (cd dist && zip -qr "ForeverSkills-${version}-forever.zip" ForeverSkills)
+
+          # Interface 16001 -> game patch 1.60.1
+          interface=$(sed -n 's/^## Interface: *\([0-9]*\).*/\1/p' ForeverSkills/ForeverSkills.toc | head -1)
+          patch=$(printf "%d.%d.%d" $((interface / 10000)) $((interface / 100 % 100)) $((interface % 100)))
+
+          case "$version" in
+            *alpha*) stability=alpha ;;
+            *beta* | *rc*) stability=beta ;;
+            *) stability=release ;;
+          esac
+
+          zip="dist/ForeverSkills-${version}-forever.zip"
+          (cd dist && zip -qr "../$zip" ForeverSkills)
+
+          {
+            echo "VERSION=$version"
+            echo "ZIP=$zip"
+            echo "STABILITY=$stability"
+            echo "PATCH=$patch"
+            echo "NOTES_FILE=dist/notes.md"
+          } >> "$GITHUB_ENV"
 
       # A tag with a hyphen (v0.1.0-alpha.1) is published as a pre-release.
-      - name: Publish release
+      - name: Publish GitHub release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          version="${GITHUB_REF_NAME#v}"
           flags=""
-          case "$version" in *-*) flags="--prerelease" ;; esac
-          gh release create "$GITHUB_REF_NAME" "dist/ForeverSkills-${version}-forever.zip" \
+          case "$VERSION" in *-*) flags="--prerelease" ;; esac
+          gh release create "$GITHUB_REF_NAME" "$ZIP" \
             --title "$GITHUB_REF_NAME" --generate-notes $flags
+          gh release view "$GITHUB_REF_NAME" --json body --jq .body > "$NOTES_FILE"
+
+      - name: Upload to CurseForge
+        if: env.CF_API_TOKEN != '' && env.CF_PROJECT_ID != ''
+        run: .github/scripts/upload-curseforge.sh
+
+      - name: Upload to Wago
+        if: env.WAGO_API_TOKEN != '' && env.WAGO_PROJECT_ID != ''
+        run: .github/scripts/upload-wago.sh
