@@ -12,12 +12,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      # Builds ForeverSkills-<version>-forever.zip and attaches it to the GitHub release.
-      # The "-forever" suffix is how WowUp matches a release asset to the Forever client.
-      - uses: BigWigsMods/packager@v2
-        with:
-          args: -t ForeverSkills -n "{package-name}-{project-version}-forever"
+
+      # Builds ForeverSkills-<version>-forever.zip. The "-forever" suffix is how WowUp
+      # matches a GitHub release asset to the Forever client.
+      - name: Build zip
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          mkdir -p dist
+          cp -r ForeverSkills dist/ForeverSkills
+          sed -i "s/@project-version@/${version}/" dist/ForeverSkills/ForeverSkills.toc
+          (cd dist && zip -qr "ForeverSkills-${version}-forever.zip" ForeverSkills)
+
+      # A tag with a hyphen (v0.1.0-alpha.1) is published as a pre-release.
+      - name: Publish release
         env:
-          GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          flags=""
+          case "$version" in *-*) flags="--prerelease" ;; esac
+          gh release create "$GITHUB_REF_NAME" "dist/ForeverSkills-${version}-forever.zip" \
+            --title "$GITHUB_REF_NAME" --generate-notes $flags
