@@ -1,6 +1,6 @@
 # ForeverSkills
 
-An addon for [World of Warcraft: Forever](https://worldofwarcraft.blizzard.com/) that handles action bar upkeep the way retail does by default.
+An addon for [World of Warcraft: Forever](https://worldofwarcraft.blizzard.com/) that handles action bar upkeep the way retail does by default. Works with the default Blizzard bars and Bartender4.
 
 - **New spells are placed for you.** When you learn a spell, it goes into the first empty slot of a visible default action bar. If every visible slot is full, you get a chat message instead.
 - **Ranks stay current.** When you learn a higher rank of a spell on your bars (Holy Light rank 1 to rank 2), the old rank is swapped for the new one in the same slot. Macros, items and other spells are never touched.
@@ -10,7 +10,7 @@ An addon for [World of Warcraft: Forever](https://worldofwarcraft.blizzard.com/)
 
 Requires the WoW Forever client (interface `16001`).
 
-1. Copy or symlink the `ForeverSkills` folder into
+1. Download this repo (Code > Download ZIP, or `git clone`), then copy or symlink the `ForeverSkills` folder into
    `World of Warcraft/_forever_/Interface/AddOns/`.
 2. Start the game, or `/reload` if it's already running.
 
@@ -54,7 +54,7 @@ Rank upgrades happen on any bar, including ones you've excluded from placement.
 - Works with the **default Blizzard action bars** and **Bartender4**. Other bar addons (Dominos, ElvUI and so on) aren't supported.
 - On the default bars, the main bar is treated as page 1 (slots 1 to 12). On another bar page or in a stance, a new spell can land on a page you can't see.
 - Passive, off-spec and level-locked spells are skipped.
-- Early release. Placement on level-up and rank swaps have had limited testing in the live client.
+- Early release. `/fskills sync`, the settings panel and Bartender4 support have been tested in the live client. Automatic placement the moment you learn a spell has had less testing, so run `/fskills sync` if a spell is ever missed.
 
 ## Contributing
 
