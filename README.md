@@ -33,6 +33,10 @@ ln -s "$PWD/ForeverSkills" "/path/to/World of Warcraft/_forever_/Interface/AddOn
 
 On a character's first login the addon only records what you already know and places nothing. Run `/fskills sync` once if you want your existing spells placed.
 
+## Bartender4
+
+If Bartender4 is loaded, ForeverSkills reads its bars instead of the Blizzard ones: enabled bars that are currently shown (so bars hidden by a visibility rule are skipped) and only the buttons each bar actually has. Without Bartender4 nothing changes. `/fskills debug` shows which bar source is in use.
+
 ## Settings
 
 Esc > Options > AddOns > ForeverSkills. All settings are saved per character.
@@ -40,14 +44,15 @@ Esc > Options > AddOns > ForeverSkills. All settings are saved per character.
 - Place new spells and upgrade spell ranks, each on or off
 - Chat messages: everything, warnings only, or silent
 - Which bars may receive new spells, and the fill order (by screen position, or a fixed order)
+  - With Bartender4 loaded, the list shows Bartender bars 1 to 10. Only enabled, currently visible bars are filled, and a bar with fewer than 12 buttons only uses the buttons it has.
 - An ignore list of spells that are never placed or upgraded
 
 Rank upgrades happen on any bar, including ones you've excluded from placement.
 
 ## Limitations
 
-- Built for the **default Blizzard action bars**. Bar addons such as Bartender, Dominos or ElvUI aren't supported.
-- The main bar is treated as page 1 (slots 1 to 12). On another bar page or in a stance, a new spell can land on a page you can't see.
+- Works with the **default Blizzard action bars** and **Bartender4**. Other bar addons (Dominos, ElvUI and so on) aren't supported.
+- On the default bars, the main bar is treated as page 1 (slots 1 to 12). On another bar page or in a stance, a new spell can land on a page you can't see.
 - Passive, off-spec and level-locked spells are skipped.
 - Early release. Placement on level-up and rank swaps have had limited testing in the live client.
 

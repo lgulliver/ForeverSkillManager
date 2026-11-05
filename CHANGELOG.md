@@ -6,6 +6,7 @@ All notable changes to ForeverSkills. Format follows [Keep a Changelog](https://
 
 ### Added
 - luacheck lint workflow and `.luacheckrc`.
+- Bartender4 support: fills Bartender's enabled, visible bars and respects each bar's button count.
 
 ## [0.1.0]
 

@@ -11,6 +11,7 @@ globals = {
 
 -- WoW API the addon reads.
 read_globals = {
+	"Bartender4",
 	"C_LevelLink",
 	"C_Spell",
 	"C_SpellBook",

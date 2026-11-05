@@ -7,11 +7,12 @@ local ADDON = "ForeverSkills"
 local DEBOUNCE = 0.5
 local MAX_ACTION_SLOT = 180
 local SLOTS_PER_BAR = 12
+local BARTENDER_BARS = 10
 
 -- { key, frame name, first slot }. Frame names are the default Blizzard bars;
 -- the main bar is always considered visible and uses page 1 (slots 1-12).
 local BARS = {
-	{ key = "main", frame = nil,                  first = 1,   label = "Main bar" },
+	{ key = "main", frame = nil,                  first = 1,   label = "Main bar", main = true },
 	{ key = "bl",   frame = "MultiBarBottomLeft",  first = 61,  label = "Bottom left bar" },
 	{ key = "br",   frame = "MultiBarBottomRight", first = 49,  label = "Bottom right bar" },
 	{ key = "r",    frame = "MultiBarRight",       first = 25,  label = "Right bar" },
@@ -95,12 +96,51 @@ end
 
 -- Action bar helpers -----------------------------------------------------
 
-local function BarVisible(bar)
-	if not bar.frame then
-		return true
+local function DefaultBars()
+	local list = {}
+	for _, bar in ipairs(BARS) do
+		list[#list + 1] = {
+			key = bar.key,
+			label = bar.label,
+			first = bar.first,
+			count = SLOTS_PER_BAR,
+			frame = bar.frame and _G[bar.frame],
+			main = bar.main,
+			alwaysVisible = bar.main,
+		}
 	end
-	local f = _G[bar.frame]
-	return f ~= nil and f:IsShown()
+	return list
+end
+
+-- Bartender4 bar N, button i sits on action slot (N-1)*12 + i, and a bar can have fewer than 12 buttons.
+local function BartenderBars()
+	local module = Bartender4 and Bartender4.GetModule and Bartender4:GetModule("ActionBars", true)
+	if not (module and module.actionbars) then
+		return nil
+	end
+	local list = {}
+	for id = 1, BARTENDER_BARS do
+		local frame = module.actionbars[id]
+		if frame and frame.config and frame.config.enabled and frame.buttons and #frame.buttons > 0 then
+			list[#list + 1] = {
+				key = "bt4_" .. id,
+				label = "Bartender bar " .. id,
+				first = (id - 1) * 12 + 1,
+				count = math.min(#frame.buttons, 12),
+				frame = frame,
+				main = id == 1,
+			}
+		end
+	end
+	return list
+end
+
+local function GetBars()
+	return BartenderBars() or DefaultBars()
+end
+
+local function BarVisible(bar)
+	return bar.alwaysVisible or (bar.frame ~= nil and bar.frame:IsShown())
 end
 
 local function SpellOnAnyBar(id)
@@ -118,7 +158,7 @@ end
 -- upward (nearest the main bar first), then vertical bars in table order.
 local function OrderedBars()
 	local usable = {}
-	for _, bar in ipairs(BARS) do
+	for _, bar in ipairs(GetBars()) do
 		if db.bars[bar.key] and BarVisible(bar) then
 			usable[#usable + 1] = bar
 		end
@@ -129,13 +169,13 @@ local function OrderedBars()
 
 	local main, horizontal, vertical = nil, {}, {}
 	for _, bar in ipairs(usable) do
-		local f = bar.frame and _G[bar.frame]
-		if not f then
+		if bar.main then
 			main = bar
 		else
+			local f = bar.frame
 			local w, h, bottom = Val(f:GetWidth()), Val(f:GetHeight()), Val(f:GetBottom())
 			if w and h and bottom and w > h then
-				horizontal[#horizontal + 1] = { bar = bar, bottom = bottom }
+				horizontal[#horizontal + 1] = { bar = bar, bottom = bottom * f:GetEffectiveScale() }
 			else
 				vertical[#vertical + 1] = bar
 			end
@@ -157,7 +197,7 @@ end
 
 local function FirstEmptySlot()
 	for _, bar in ipairs(OrderedBars()) do
-		for slot = bar.first, bar.first + SLOTS_PER_BAR - 1 do
+		for slot = bar.first, bar.first + bar.count - 1 do
 			if not HasAction(slot) then
 				return slot
 			end
@@ -355,6 +395,18 @@ local function BuildIgnorePanel()
 	return panel
 end
 
+-- Bars offered as checkboxes: Bartender4's ten when it is installed, else the default Blizzard bars.
+local function SettingsBars()
+	if not Bartender4 then
+		return BARS
+	end
+	local list = {}
+	for id = 1, BARTENDER_BARS do
+		list[id] = { key = "bt4_" .. id, label = "Bartender bar " .. id }
+	end
+	return list
+end
+
 local function BuildSettings()
 	local category, layout = Settings.RegisterVerticalLayoutCategory(ADDON)
 
@@ -388,11 +440,11 @@ local function BuildSettings()
 		"How much ForeverSkills says in chat. Command replies are always shown.",
 		{ "Everything", "Warnings only", "Silent" })
 
-	Header("Bars")
+	Header(Bartender4 and "Bars (Bartender4 detected)" or "Bars")
 	Dropdown("fillOrder", "fillOrder", "Fill order", DEFAULTS.fillOrder,
 		"Screen position fills the main bar, then the lowest bar upward. Fixed uses the order listed below.",
 		{ "By screen position", "Fixed (list order)" })
-	for _, bar in ipairs(BARS) do
+	for _, bar in ipairs(SettingsBars()) do
 		Check("bar_" .. bar.key, db.bars, bar.key, bar.label, true,
 			"Allow new spells to be placed on this bar. Rank upgrades happen on any bar regardless.")
 	end
@@ -424,6 +476,11 @@ local function InitDB()
 	for _, bar in ipairs(BARS) do
 		if db.bars[bar.key] == nil then
 			db.bars[bar.key] = true
+		end
+	end
+	for id = 1, BARTENDER_BARS do
+		if db.bars["bt4_" .. id] == nil then
+			db.bars["bt4_" .. id] = true
 		end
 	end
 	db.ignored = db.ignored or {}
@@ -479,7 +536,8 @@ SlashCmdList.FOREVERSKILLS = function(arg)
 		local known, best = ScanSpellbook()
 		Print(("known castable spells: %d, in combat: %s, pending: %s"):format(
 			Count(known), tostring(InCombatLockdown()), tostring(pending)), "cmd")
-		for _, bar in ipairs(BARS) do
+		Print("bar source: " .. (BartenderBars() and "Bartender4" or "default Blizzard bars"), "cmd")
+		for _, bar in ipairs(GetBars()) do
 			Print(("%s: visible=%s, enabled=%s"):format(bar.label, tostring(BarVisible(bar)), tostring(db.bars[bar.key])), "cmd")
 		end
 		local order = {}
