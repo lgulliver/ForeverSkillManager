@@ -1,4 +1,8 @@
-# ForeverSkillManager
+<p align="center">
+  <img src="assets/logo.png" alt="ForeverSkillManager logo" width="160">
+</p>
+
+<h1 align="center">ForeverSkillManager</h1>
 
 An addon for [World of Warcraft: Forever](https://worldofwarcraft.blizzard.com/) that handles action bar upkeep the way retail does by default. Works with the default Blizzard bars and Bartender4.
 
