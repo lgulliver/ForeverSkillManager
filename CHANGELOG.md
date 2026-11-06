@@ -4,6 +4,9 @@ All notable changes to ForeverSkillManager. Format follows [Keep a Changelog](ht
 
 ## [Unreleased]
 
+### Changed
+- CI: actions pinned to commit SHAs with read-only tokens; every hyphenated tag is a CurseForge pre-release; a release re-run replaces the asset instead of failing; `LICENSE` ships in the zip.
+
 ## [0.1.0] - 2026-11-05
 
 First release.
