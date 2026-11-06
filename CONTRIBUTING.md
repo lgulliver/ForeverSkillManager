@@ -41,7 +41,7 @@ The addon can't be run outside the game, so test changes in the client and say w
 Releases are cut by pushing a version tag, for example `git tag v0.2.0 && git push origin v0.2.0`. The Release workflow then:
 
 1. Builds `ForeverSkillManager-<version>-forever.zip` with the TOC version filled in. The `-forever` suffix is how WowUp matches the asset to the Forever client.
-2. Publishes a GitHub release with generated notes. A tag with a hyphen (`v0.2.0-alpha.1`) is a pre-release.
+2. Publishes a GitHub release with generated notes, and includes `LICENSE` in the zip. A tag with a hyphen (`v0.2.0-alpha.1`) is a pre-release, and goes to CurseForge as alpha (if it says alpha) or beta. Re-running the workflow replaces the asset on an existing release.
 3. Uploads the same zip to CurseForge, if configured. Wago is notified by a GitHub webhook on release and reads the game version from the `-forever.zip` name.
 
 The game patch is derived from the TOC `## Interface` line (`16001` becomes `1.60.1`). CurseForge must already list that Forever patch, or the upload fails.

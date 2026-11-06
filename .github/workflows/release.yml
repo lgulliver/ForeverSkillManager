@@ -17,7 +17,9 @@ jobs:
       CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
       CF_PROJECT_ID: ${{ vars.CF_PROJECT_ID }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
 
       # Builds ForeverSkillManager-<version>-forever.zip. The "-forever" suffix is how WowUp
       # matches a GitHub release asset to the Forever client.
@@ -26,15 +28,17 @@ jobs:
           version="${GITHUB_REF_NAME#v}"
           mkdir -p dist
           cp -r ForeverSkillManager dist/ForeverSkillManager
+          cp LICENSE dist/ForeverSkillManager/LICENSE
           sed -i "s/@project-version@/${version}/" dist/ForeverSkillManager/ForeverSkillManager.toc
 
           # Interface 16001 -> game patch 1.60.1
           interface=$(sed -n 's/^## Interface: *\([0-9]*\).*/\1/p' ForeverSkillManager/ForeverSkillManager.toc | head -1)
           patch=$(printf "%d.%d.%d" $((interface / 10000)) $((interface / 100 % 100)) $((interface % 100)))
 
+          # Any hyphenated tag is a pre-release, so it never ships to CurseForge as a release.
           case "$version" in
             *alpha*) stability=alpha ;;
-            *beta* | *rc*) stability=beta ;;
+            *-*) stability=beta ;;
             *) stability=release ;;
           esac
 
@@ -56,8 +60,13 @@ jobs:
         run: |
           flags=""
           case "$VERSION" in *-*) flags="--prerelease" ;; esac
-          gh release create "$GITHUB_REF_NAME" "$ZIP" \
-            --title "$GITHUB_REF_NAME" --generate-notes $flags
+          # A re-run replaces the asset on the existing release instead of failing.
+          if gh release view "$GITHUB_REF_NAME" > /dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" "$ZIP" --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" "$ZIP" \
+              --title "$GITHUB_REF_NAME" --generate-notes $flags
+          fi
           gh release view "$GITHUB_REF_NAME" --json body --jq .body > "$NOTES_FILE"
 
       - name: Upload to CurseForge
